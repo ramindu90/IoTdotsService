@@ -6,6 +6,7 @@ package iot.dots.tracker.service;
 
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Geometry;
+import iot.dots.tracker.service.bean.Device;
 import iot.dots.tracker.service.bean.GeoLocation;
 import iot.dots.tracker.service.utils.GeometryUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -204,6 +205,31 @@ public class LocationService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/running_total")
+    public Response getRunningTotalForDevice(Device device) {
+        try {
+            String body = "{\n"
+                    + "\t\"tableName\":\""+device.getAnalyticsTableName()+"\", \n"
+                    + "\t\"query\":\"id:"+ device.getId() +"\", \n"
+                    + "\t\"start\":0, \n"
+                    + "\t\"count\":1, \n"
+                    + "\t\"columns\": [\"runningTotal\"]\n"
+                    + "}";
+
+            JSONObject result = doPOST("localhost:9445/", "analytics/search", "application/json", body, true);
+            JSONArray distance = result.getJSONArray("result");
+            return Response.status(200).
+                    entity(distance.getJSONObject(0).getJSONObject("values").getDouble("runningTotal")).build();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return Response.status(500).entity("internal error occurred.").build();
+    }
+
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/distances")
     public Response getDistancesForGepLocations(GeoLocation geoLocation) {
 
@@ -305,16 +331,20 @@ public class LocationService {
 
                     if(path.length() != j+1) {
                         JSONObject next = path.getJSONObject(j+1);
-                        if (current.getJSONObject("values").getDouble("latitude2") != next.getJSONObject("values").getDouble
-                                ("latitude1") || current.getJSONObject("values").getDouble("longitude2") != next
-                                .getJSONObject("values").getDouble
-                                        ("longitude1")) {
+                        if ((current.getJSONObject("values").getDouble("latitude2") !=
+                                next.getJSONObject("values").getDouble("latitude1") ||
+                                current.getJSONObject("values").getDouble("longitude2") !=
+                                        next.getJSONObject("values").getDouble("longitude1")) &&
+                                ( current.getJSONObject("values").getDouble("distance") != 0 &&
+                                        next.getJSONObject("values").getDouble("distance") != 0)) {
+                            System.out.println("CULPRIT");
+                            System.out.println(current.toString());
+                            System.out.println(next.toString());
                             successPath = false;
+                            System.out.println("Success FALSE");
                             break;
                         }
                     }
-
-
                 }
                 if (successPath) {
                     JSONObject successPathObj = new JSONObject();
@@ -402,6 +432,7 @@ public class LocationService {
                 }
             }
         }
+        System.out.println("possibile doubles");
         System.out.println(Arrays.deepToString(possibleDoubles));
         return possibleDoubles;
     }
@@ -416,8 +447,13 @@ public class LocationService {
         geoLocation.setLongitude2(-84.451965);
         geoLocation.setId("0004");
 //        geoLocation.setAnalyticsTableName("DISTANCESTREAM12");
-        geoLocation.setAnalyticsTableName("DISTANCESTREAMAGGREGATEDOUBLE");
+        geoLocation.setAnalyticsTableName("IOT_DOTS_POINTDISTANCESTREAM");
         locationService.getDistancesForGepLocations(geoLocation);
+
+//        Device device = new Device();
+//        device.setId("0004");
+//        device.setAnalyticsTableName("RUNNING_TOTAL");
+//        locationService.getRunningTotalForDevice(device);
     }
 
     public Geometry getCurrentGeometry(Object[] data, boolean point) {

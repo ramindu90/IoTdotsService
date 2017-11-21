@@ -145,19 +145,20 @@
 
         </li>
     </ul>
-    <!--<ul class="nav navbar-nav-right">-->
-        <!--<li>-->
-            <!--<form id="mapSearch3" class="navbar-form" role="search"-->
-                  <!--onsubmit="focusOnSpatialObject($(this).find('#position_1').val(), $(this).find('#position_2').val());return false;">-->
-                <!--<div class="form-group has-feedback">-->
-                    <!--<input autofocus="true" id="searchbox3" type="text" placeholder="Search"-->
-                           <!--class="form-control typeahead">-->
-                    <!--<span id="searchicon3" class="fa fa-search form-control-feedback"></span>-->
-                <!--</div>-->
-                <!--<input style="visibility: hidden; position: fixed;" type="submit"/>-->
-            <!--</form>-->
-        <!--</li>-->
-    <!--</ul>-->
+</div>
+
+<div class="navbar-collapse collapse" style="display:inline-block;">
+    <ul class="nav navbar-nav-right">
+        <li>
+            <label>running total</label>
+            <div class="form-group has-feedback">
+                <input autofocus="true" id="running_total" type="text" placeholder="running total"
+                       class="form-control typeahead">
+                <span id="running_totalIcon" class="fa fa-arrows form-control-feedback"></span>
+            </div>
+            <button type="button" class="form-control typeahead" id="running_total_btn">View Running Total</button>
+        </li>
+    </ul>
 </div>
 
 <div id="objectInfo" style="background: darkgray;display: none;border-radius: 13px;height: 94%;padding: 0"

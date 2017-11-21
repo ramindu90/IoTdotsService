@@ -100,6 +100,34 @@ function initializeMap() {
         maxNativeZoom: 18
     });
 
+    $("#running_total_btn").click(function() {
+        var requestBody = "{" +
+            "\"id\":\""+$("#device_id").val()+"\"," +
+            "\"analyticsTableName\":\"IOTDOTS_RUNNING_TOTAL\"" +
+            "}";
+
+        (function poll(){
+            setInterval(function(){
+                $.ajax({
+                    url: 'https://localhost:9445/org.iot.dots.service-1.0-SNAPSHOT/rest/service/running_total',
+                    type: 'POST',
+                    datatype:'json',
+                    contentType: "application/json",
+                    data: requestBody, // or $('#myform').serializeArray()
+                    success: function (data, status, jqXHR) {
+                        console.log(data);
+                        $('#running_total').val(data);
+                    },
+                    error: function (jqXHR, status) {
+                        // error handler
+                        console.log(jqXHR);
+                        console.error('fail' + status.code);
+                    }
+                });
+            }, 2000);
+        })();
+    });
+
 
     $("#calculate_dis_btn").click(function() {
         console.log("clicked calculate button");
@@ -111,7 +139,7 @@ function initializeMap() {
             "\"longitude1\":"+point1[1]+"," +
             "\"longitude2\":"+point2[1]+"," +
             "\"id\":\""+$("#device_id").val()+"\"," +
-            "\"analyticsTableName\":\"DISTANCESTREAMAGGREGATEDOUBLE\"" +
+            "\"analyticsTableName\":\"IOT_DOTS_POINTDISTANCESTREAM\"" +
             "}";
 
         $.ajax({
@@ -150,9 +178,7 @@ function initializeMap() {
                         // firstpolyline.bindPopup(data[i].total_distance);
                         var popupTemplate = $('#markerPopup');
                         popupTemplate.find('#distance').html(data[i].total_distance);
-                        console.log(data[i].total_distance);
                         firstpolyline.bindPopup(popupTemplate.html());
-                        
                         firstpolyline.addTo(map);
                     } else {
                         var firstpolyline = new L.polyline(pointList, {
@@ -167,7 +193,6 @@ function initializeMap() {
                         console.log(data[i].total_distance);
                         firstpolyline.addTo(map);
                     }
-                    
                 }
             },
             error: function (jqXHR, status) {
