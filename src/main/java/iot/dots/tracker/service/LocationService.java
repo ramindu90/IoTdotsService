@@ -75,8 +75,8 @@ public class LocationService {
         authHeader = "Basic " + new String(encodedAuth, Charset.forName("UTF-8"));
         try {
             SSLContext ctx = SSLContext.getInstance("TLS");
-//            String currentDir = System.getProperty("user.dir");
-            String currentDir = "/Users/ramindu/wso2/supportFolder/IotDots/wso2iot-3.1.0/wso2/analytics";
+            String currentDir = System.getProperty("user.dir");
+//            String currentDir = "/Users/ramindu/wso2/supportFolder/IotDots/wso2iot-3.1.0/wso2/analytics";
             TrustManager[] trustManagers =
                     getTrustManagers("jks", new FileInputStream(
                             new File(currentDir + "/repository/resources/security/client-truststore.jks")),
