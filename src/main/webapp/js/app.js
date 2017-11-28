@@ -27,7 +27,7 @@ $('body').on('hidden.bs.modal', '.modal', function () {
 });
 
 /*Map layer configurations*/
-var map, position1Clicked = false, position2Clicked = false;
+var map, position1Clicked = false, position2Clicked = false, domain;
 
 initialLoad();
 
@@ -70,6 +70,7 @@ function initialLoad() {
 
 
 function initializeMap() {
+    domain = window.location.hostname;
     if (typeof(map) !== 'undefined') {
         map.remove();
     }
@@ -109,7 +110,7 @@ function initializeMap() {
         (function poll(){
             setInterval(function(){
                 $.ajax({
-                    url: 'https://localhost:9445/org.iot.dots.service-1.0-SNAPSHOT/rest/service/running_total',
+                    url: 'https://'+domain+':9445/org.iot.dots.service-1.0-SNAPSHOT/rest/service/running_total',
                     type: 'POST',
                     datatype:'json',
                     contentType: "application/json",
@@ -143,7 +144,7 @@ function initializeMap() {
             "}";
 
         $.ajax({
-            url: 'https://localhost:9445/org.iot.dots.service-1.0-SNAPSHOT/rest/service/distances',
+            url: 'https://'+domain+':9445/org.iot.dots.service-1.0-SNAPSHOT/rest/service/distances',
             type: 'POST',
             datatype:'json',
             contentType: "application/json",
