@@ -116,8 +116,8 @@ function initializeMap() {
                     contentType: "application/json",
                     data: requestBody, // or $('#myform').serializeArray()
                     success: function (data, status, jqXHR) {
-                        console.log(data);
-                        $('#running_total').val(data);
+                        console.log(parseFloat(data).toFixed(2));
+                        $('#running_total').val(parseFloat(data).toFixed(2));
                     },
                     error: function (jqXHR, status) {
                         // error handler
