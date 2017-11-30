@@ -178,7 +178,7 @@ function initializeMap() {
                         });
                         // firstpolyline.bindPopup(data[i].total_distance);
                         var popupTemplate = $('#markerPopup');
-                        popupTemplate.find('#distance').html(data[i].total_distance);
+                        popupTemplate.find('#distance').html(parseFloat(data[i].total_distance).toFixed(2));
                         firstpolyline.bindPopup(popupTemplate.html());
                         firstpolyline.addTo(map);
                     } else {
@@ -189,7 +189,7 @@ function initializeMap() {
                             smoothFactor: 1
                         });
                         var popupTemplate = $('#markerPopup');
-                        popupTemplate.find('#distance').html(data[i].total_distance);
+                        popupTemplate.find('#distance').html(parseFloat(data[i].total_distance).toFixed(2));
                         firstpolyline.bindPopup(popupTemplate.html());
                         console.log(data[i].total_distance);
                         firstpolyline.addTo(map);
